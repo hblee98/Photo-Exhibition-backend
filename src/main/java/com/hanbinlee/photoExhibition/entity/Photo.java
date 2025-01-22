@@ -1,16 +1,16 @@
 package com.hanbinlee.photoExhibition.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-
-import java.util.Optional;
 
 
 @Entity
 @Table(name = "photos")
 public class Photo {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "city_id")
+    @JsonBackReference
     private City city;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,8 +24,8 @@ public class Photo {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "image_url", nullable = false)
-    private String imageUrl;
+    @Column(name = "image_URL", nullable = false)
+    private String imageURL;
 
 
     public void setId(Long id) {
@@ -38,6 +38,9 @@ public class Photo {
 
     public void setRegion(String region) {
         this.region = region;
+    }
+    public String getRegion(){
+        return region;
     }
     public String getSubRegion() {
         return subRegion;
@@ -55,12 +58,12 @@ public class Photo {
         this.description = description;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
     public City getCity() {

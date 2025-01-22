@@ -57,14 +57,14 @@ public class PhotoService {
         photo.setRegion(cityName);
         photo.setSubRegion(parts[0]);
         photo.setDescription(fileNameWithoutExtension);
-        photo.setImageUrl("https://drive.google.com/uc?id=" + file.getId());
+        photo.setImageURL("https://drive.google.com/uc?id=" + file.getId());
 
-        System.out.println("The Region: " +photo.getCity());
+        System.out.println("The Region: " +photo.getRegion());
         System.out.println("The Subregion :"+photo.getSubRegion());
         System.out.println("The description: " +photo.getDescription());
-        System.out.println("The Image URL: " +photo.getImageUrl());
+        System.out.println("The Image URL: " +photo.getImageURL());
 
-        if (!photoRepository.existsByImageUrl(photo.getImageUrl())) {
+        if (!photoRepository.existsByImageURL(photo.getImageURL())) {
             photoRepository.save(photo);
             System.out.println("Photo saved to database.");
         } else {
@@ -74,8 +74,8 @@ public class PhotoService {
     public List<Photo> getAllPhotos() {
         return photoRepository.findAll();
     }
-
-
-
+    public List<Photo> getPhotosByRegion(String region) {
+        return photoRepository.findByCityName(region);
+    }
 }
 

@@ -1,7 +1,7 @@
 package com.hanbinlee.photoExhibition.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +14,8 @@ public class City {
 
     @Column(name = "name", unique = true, nullable = false)
     private String name;
-
-    @OneToMany(mappedBy = "city", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "city")
+    @JsonManagedReference
     private List<Photo> photos = new ArrayList<>();
 
     public Long getId() {

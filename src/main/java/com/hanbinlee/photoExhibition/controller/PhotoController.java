@@ -19,10 +19,14 @@ public class PhotoController {
         this.cityService = cityService;
     }
 
-    @GetMapping
-    public List<Photo> getAllPhotos() {
-        return photoService.getAllPhotos();
+
+    @GetMapping("/all")
+    public List<Photo> getAllPhotos() {return photoService.getAllPhotos();}
+    @GetMapping("/regions/{region}")
+    public List<Photo> getPhotosByRegion(@PathVariable String region) {
+        return photoService.getPhotosByRegion(region);
     }
+
     @GetMapping("/regions")
     public List<String> getAllCities(){
         return cityService.getAllRegions();
