@@ -8,7 +8,8 @@ import java.util.List;
 
 public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
-    boolean existsByImageURL(String imageURL);
+    boolean existsByWebContentLink(String webContentLink);
     List<Photo> findByCityName(String cityName);
+
 
 }

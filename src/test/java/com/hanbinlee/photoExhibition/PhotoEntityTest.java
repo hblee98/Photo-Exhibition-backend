@@ -15,24 +15,27 @@ public class PhotoEntityTest {
         String expectedRegion = "Seoul";
         String expectedSubRegion = "Yongsan";
         String expectedDescription = "Yongsan station";
-        String expectedImageUrl = "http://example.com/seoul.jpg";
+        String expectedWebContentLink = "http://example.com/seoul.jpg";
+        int expectedWidth = 400;
+        int expectedHeight = 600;
         City expectedCity = new City();
 
         photo.setId(expectedId);
         photo.setRegion(expectedRegion);
         photo.setSubRegion(expectedSubRegion);
         photo.setDescription(expectedDescription);
-        photo.setImageURL(expectedImageUrl);
+        photo.setWebContentLink(expectedWebContentLink);
         photo.setCity(expectedCity);
-
-
+        photo.setWidth(expectedWidth);
 
         assertEquals(expectedId, photo.getId());
         assertEquals(expectedRegion, photo.getRegion());
         assertEquals(expectedSubRegion, photo.getSubRegion());
         assertEquals(expectedDescription, photo.getDescription());
-        assertEquals(expectedImageUrl, photo.getImageURL());
+        assertEquals(expectedWebContentLink, photo.getWebContentLink());
         assertEquals(expectedCity, photo.getCity());
+        assertEquals(expectedWidth, photo.getWidth());
+        assertEquals(expectedHeight, photo.getHeight());
     }
 }
 

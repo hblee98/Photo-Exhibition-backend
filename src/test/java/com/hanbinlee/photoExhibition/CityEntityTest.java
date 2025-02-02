@@ -3,14 +3,11 @@ package com.hanbinlee.photoExhibition;
 import com.hanbinlee.photoExhibition.entity.City;
 import com.hanbinlee.photoExhibition.entity.Photo;
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CityEntityTest {
-
     @Test
     public void testGetterAndSetter() {
         City city = new City();
@@ -23,7 +20,6 @@ public class CityEntityTest {
         assertEquals(expectedId, city.getId());
         assertEquals(expectedName, city.getName());
     }
-
     @Test
     public void testPhotosGetterAndSetter() {
         City city = new City();

@@ -7,7 +7,10 @@ import com.hanbinlee.photoExhibition.repository.CityRepository;
 import com.google.api.services.drive.model.File;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 @Service
@@ -16,14 +19,20 @@ public class PhotoService {
     private final CityRepository cityRepository;
     private final PhotoRepository photoRepository;
     private final GoogleDriveService googleDriveService;
-
     @Value("${google.drive.photo-folder-id}")
     private String photoFolderId;
-
     public PhotoService(PhotoRepository photoRepository,CityRepository cityRepository,GoogleDriveService googleDriveService) {
         this.photoRepository = photoRepository;
         this.cityRepository = cityRepository;
         this.googleDriveService = googleDriveService;
+    }
+    public static int[] getImageDimensions(String imageURL) throws IOException {
+        URL url = new URL(imageURL);
+        BufferedImage image = ImageIO.read(url);
+        if(image == null){
+            throw new IOException("Unable to read image from URL:" + imageURL);
+        }
+        return new int[]{image.getWidth(), image.getHeight()};
     }
     public void savePhotoInfo() throws IOException {
 
@@ -44,8 +53,6 @@ public class PhotoService {
             }
         }
     }
-
-
     private void savePhotoToCityTable(City city, File file) {
 
         Photo photo = new Photo();
@@ -57,14 +64,26 @@ public class PhotoService {
         photo.setRegion(cityName);
         photo.setSubRegion(parts[0]);
         photo.setDescription(fileNameWithoutExtension);
-        photo.setImageURL("https://drive.google.com/uc?id=" + file.getId());
+
+        String webContentLink = file.getWebContentLink();
+        photo.setWebContentLink(webContentLink);
 
         System.out.println("The Region: " +photo.getRegion());
         System.out.println("The Subregion :"+photo.getSubRegion());
         System.out.println("The description: " +photo.getDescription());
-        System.out.println("The Image URL: " +photo.getImageURL());
+        System.out.println("The webContent Link: " +photo.getWebContentLink());
 
-        if (!photoRepository.existsByImageURL(photo.getImageURL())) {
+        if (!photoRepository.existsByWebContentLink(photo.getWebContentLink())) {
+            try {
+                int[] dimensions = getImageDimensions(photo.getWebContentLink());
+                photo.setWidth(dimensions[0]);
+                photo.setHeight(dimensions[1]);
+                System.out.println("Width: " + dimensions[0] + ", Height: " + dimensions[1]);
+            } catch (IOException e) {
+                System.err.println("Failed to get image dimensions: " + e.getMessage());
+                photo.setWidth(0);
+                photo.setHeight(0);
+            }
             photoRepository.save(photo);
             System.out.println("Photo saved to database.");
         } else {
@@ -78,4 +97,3 @@ public class PhotoService {
         return photoRepository.findByCityName(region);
     }
 }
-
