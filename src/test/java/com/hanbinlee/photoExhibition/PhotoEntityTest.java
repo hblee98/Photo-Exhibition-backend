@@ -12,27 +12,28 @@ public class PhotoEntityTest {
 
         Photo photo = new Photo();
         Long expectedId = 1L;
-        String expectedRegion = "Seoul";
-        String expectedSubRegion = "Yongsan";
-        String expectedDescription = "Yongsan station";
-        String expectedWebContentLink = "http://example.com/seoul.jpg";
-        int expectedWidth = 400;
-        int expectedHeight = 600;
+        String expectedRegion = "Brisbane";
+        String expectedSubRegion = "BrisbaneCBD";
+        String expectedDescription = "city-hall";
+        String expectedFilePath = "src/main/resources/sample image/Brisbane/BrisbaneCBD city-hall";
+        int expectedWidth = 2000;
+        int expectedHeight = 1333;
         City expectedCity = new City();
 
         photo.setId(expectedId);
         photo.setRegion(expectedRegion);
         photo.setSubRegion(expectedSubRegion);
         photo.setDescription(expectedDescription);
-        photo.setWebContentLink(expectedWebContentLink);
+        photo.setFilePath(expectedFilePath);
         photo.setCity(expectedCity);
         photo.setWidth(expectedWidth);
+        photo.setHeight(expectedHeight);
 
         assertEquals(expectedId, photo.getId());
         assertEquals(expectedRegion, photo.getRegion());
         assertEquals(expectedSubRegion, photo.getSubRegion());
         assertEquals(expectedDescription, photo.getDescription());
-        assertEquals(expectedWebContentLink, photo.getWebContentLink());
+        assertEquals(expectedFilePath, photo.getFilePath());
         assertEquals(expectedCity, photo.getCity());
         assertEquals(expectedWidth, photo.getWidth());
         assertEquals(expectedHeight, photo.getHeight());

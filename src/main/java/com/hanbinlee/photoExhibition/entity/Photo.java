@@ -19,8 +19,9 @@ public class Photo {
     private String subRegion;
     @Column(name = "description", nullable = false)
     private String description;
-    @Column(name = "webContentLink", nullable = false)
-    private String webContentLink;
+    @Column(name = "file_Path", nullable = false)
+    private String filePath;
+
     @Column(name ="width", nullable = false)
     private int width;
     @Column(name ="height", nullable = false)
@@ -55,14 +56,10 @@ public class Photo {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public String getWebContentLink() {
-        return webContentLink;
+    public String getFilePath(){
+        return filePath;
     }
-
-    public void setWebContentLink(String webContentLink) {
-        this.webContentLink = webContentLink;
-    }
+    public void setFilePath(String filePath) {this.filePath = filePath;}
 
     public City getCity() {
         return city;

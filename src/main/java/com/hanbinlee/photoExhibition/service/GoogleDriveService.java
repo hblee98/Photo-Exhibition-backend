@@ -9,12 +9,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.List;
 
 @Configuration
 public class GoogleDriveService {
-
     @Bean
     public Drive googleDrive() throws IOException {
         InputStream credentialsStream = getClass().getResourceAsStream("/credentials.json");
@@ -33,15 +35,27 @@ public class GoogleDriveService {
     public List<File> listFilesInFolder(String folderId) throws IOException {
         FileList result = googleDrive().files().list()
                 .setQ("'" + folderId + "' in parents and trashed = false")
-                .setFields("nextPageToken, files(id, name, mimeType, webViewLink, webContentLink)")
+                .setFields("files(id, name)")
                 .execute();
         return result.getFiles();
     }
     public List<File> listFolders(String folderId) throws IOException {
         FileList result = googleDrive().files().list()
                 .setQ("'" + folderId + "' in parents and trashed = false")
-                .setFields("nextPageToken, files(id, name, mimeType)")
+                .setFields("files(id, name)")
                 .execute();
         return result.getFiles();
+    }
+    public void downloadAndSaveFile(String folderName, String fileId, String fileName) throws IOException {
+        String folderPath = "src/main/resources/static/images/" + folderName + "/";
+        Files.createDirectories(Paths.get(folderPath));
+        java.io.File localFile = new java.io.File(folderPath + fileName);
+        if (localFile.exists()) {
+            System.out.println("The file already exists: " + fileName);
+            return;
+        }
+        InputStream inputStream = googleDrive().files().get(fileId).executeMediaAsInputStream();
+        Files.copy(inputStream, Paths.get(localFile.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
+        System.out.println("Download completed: " + folderPath + fileName);
     }
 }
