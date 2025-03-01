@@ -20,6 +20,7 @@ public class PhotoExhibitionApplication {
 	}
 
 	@Bean
+	@SuppressWarnings("unused")
 	public CommandLineRunner run() {
 		return args -> {
 			try {

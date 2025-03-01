@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.List;
 
 @Service
@@ -39,7 +40,7 @@ public class PhotoService {
                     googleDriveService.downloadAndSaveFile(folderName, photo.getId(), photo.getName());
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | GeneralSecurityException e) {
             System.err.println("Failed to download pictures: " + e.getMessage());
         }
     }
@@ -52,7 +53,7 @@ public class PhotoService {
         }
         return new int[]{image.getWidth(), image.getHeight()};
     }
-    public void savePhotoInfo() throws IOException {
+    public void savePhotoInfo() throws IOException, GeneralSecurityException {
 
         List<File> folders = googleDriveService.listFolders(photoFolderId);
 
@@ -71,27 +72,35 @@ public class PhotoService {
             }
         }
     }
+    private String sanitizeFileName(String fileName) {
+        return fileName.replaceAll("[^a-zA-Z0-9.-]", "_");
+    }
     private void savePhotoToCityTable(City city, File file) throws IOException {
         Photo photo = new Photo();
         photo.setCity(city);
 
         String[] parts = file.getName().split(" ", 2);
+        String fileName = file.getName();
+        String sanitizedFileName = sanitizeFileName(fileName);
         String fileNameWithoutExtension = parts[1].replaceAll("\\.[^\\.]+$", "");
         String cityName = city.getName();
-        String filePath = "/api/photos/" + cityName + "/" + file.getName();
+
+        String originFilePath = "/api/photos/images/" + cityName + "/" + sanitizedFileName;
+        String thumbnailFilePath = "/api/photos/images/" + cityName + "/thumbnail/" + sanitizedFileName;
 
         photo.setRegion(cityName);
         photo.setSubRegion(parts[0]);
         photo.setDescription(fileNameWithoutExtension);
-        photo.setFilePath(filePath);
+        photo.setOriginFilePath(originFilePath);
+        photo.setThumbnailFilePath(thumbnailFilePath);
 
         System.out.println("The Region: " + photo.getRegion());
         System.out.println("The Subregion: " + photo.getSubRegion());
         System.out.println("The description: " + photo.getDescription());
-        System.out.println("File Path: " + photo.getFilePath());
+        System.out.println("The origin File Path: " + photo.getOriginFilePath());
+        System.out.println("The thumbnail File Path: " + photo.getThumbnailFilePath());
 
         if (!photoRepository.existsByCityAndDescription(city, fileNameWithoutExtension)) {
-            String fileName = file.getName();
             try {
                 int[] dimensions = getImageDimensions(cityName, fileName);
                 photo.setWidth(dimensions[0]);

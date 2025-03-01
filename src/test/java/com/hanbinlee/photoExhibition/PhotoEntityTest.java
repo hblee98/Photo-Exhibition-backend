@@ -15,7 +15,9 @@ public class PhotoEntityTest {
         String expectedRegion = "Brisbane";
         String expectedSubRegion = "BrisbaneCBD";
         String expectedDescription = "city-hall";
-        String expectedFilePath = "src/main/resources/sample image/Brisbane/BrisbaneCBD city-hall";
+        String expectedOriginFilePath = "src/main/resources/sample image/Brisbane/BrisbaneCBD city-hall";
+        String expectedThumbnailFilePath = "src/main/resources/sample image/Brisbane/mobile/BrisbaneCBD city-hall";
+
         int expectedWidth = 2000;
         int expectedHeight = 1333;
         City expectedCity = new City();
@@ -24,7 +26,8 @@ public class PhotoEntityTest {
         photo.setRegion(expectedRegion);
         photo.setSubRegion(expectedSubRegion);
         photo.setDescription(expectedDescription);
-        photo.setFilePath(expectedFilePath);
+        photo.setOriginFilePath(expectedOriginFilePath);
+        photo.setThumbnailFilePath(expectedThumbnailFilePath);
         photo.setCity(expectedCity);
         photo.setWidth(expectedWidth);
         photo.setHeight(expectedHeight);
@@ -33,7 +36,8 @@ public class PhotoEntityTest {
         assertEquals(expectedRegion, photo.getRegion());
         assertEquals(expectedSubRegion, photo.getSubRegion());
         assertEquals(expectedDescription, photo.getDescription());
-        assertEquals(expectedFilePath, photo.getFilePath());
+        assertEquals(expectedOriginFilePath, photo.getOriginFilePath());
+        assertEquals(expectedThumbnailFilePath, photo.getThumbnailFilePath());
         assertEquals(expectedCity, photo.getCity());
         assertEquals(expectedWidth, photo.getWidth());
         assertEquals(expectedHeight, photo.getHeight());

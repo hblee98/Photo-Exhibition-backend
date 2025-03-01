@@ -19,8 +19,10 @@ public class Photo {
     private String subRegion;
     @Column(name = "description", nullable = false)
     private String description;
-    @Column(name = "file_Path", nullable = false)
-    private String filePath;
+    @Column(name = "origin_file_Path", nullable = false)
+    private String originFilePath;
+    @Column(name = "thumbnail_file_Path", nullable = false)
+    private String thumbnailFilePath;
 
     @Column(name ="width", nullable = false)
     private int width;
@@ -56,11 +58,22 @@ public class Photo {
     public void setDescription(String description) {
         this.description = description;
     }
-    public String getFilePath(){
-        return filePath;
+    public String getOriginFilePath(){
+        return originFilePath;
     }
-    public void setFilePath(String filePath) {this.filePath = filePath;}
 
+    public void setOriginFilePath(String originFilePath) {
+        this.originFilePath = originFilePath;
+    }
+    
+    public String getThumbnailFilePath(){
+        return thumbnailFilePath;
+    }
+
+    public void setThumbnailFilePath(String thumbFilePath) {
+        this.thumbnailFilePath = thumbFilePath;
+    }
+    
     public City getCity() {
         return city;
     }
