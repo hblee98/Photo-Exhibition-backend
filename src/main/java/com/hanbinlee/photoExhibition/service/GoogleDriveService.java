@@ -85,12 +85,16 @@ public class GoogleDriveService {
             BufferedImage image = ImageIO.read(originalFile);
             if (image != null) {
                 Thumbnails.of(originalFile)
-                        .size(600, 600)
+                        .size(400, 400)
                         .keepAspectRatio(true)
                         .useExifOrientation(true)
+                        .outputQuality(0.6)
                         .outputFormat("jpg")
-                        .outputQuality(0.8)
                         .toFile(thumbnailFile);
+
+                image.flush();
+                image = null;
+                System.gc();
 
                 System.out.println("Thumbnail saved: " + thumbnailFile.getAbsolutePath());
             } else {
