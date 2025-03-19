@@ -93,7 +93,6 @@ public class GoogleDriveService {
                         .toFile(thumbnailFile);
 
                 image.flush();
-                image = null;
                 System.gc();
 
                 System.out.println("Thumbnail saved: " + thumbnailFile.getAbsolutePath());

@@ -47,9 +47,20 @@ public class PhotoService {
     public static int[] getImageDimensions(String cityName, String fileName) throws IOException {
         String filePath = "src/main/resources/static/images/" + cityName + "/" + fileName;
         java.io.File imageFile = new java.io.File(filePath);
+        if (!imageFile.exists()) {
+            System.err.println("File does not exist: " + filePath);
+            return new int[]{0, 0};
+        }
+        if (!imageFile.canRead()) {
+            System.err.println("Cannot read file: " + filePath);
+            return new int[]{0, 0};
+        }
+        System.out.println("File path: " + imageFile.getAbsolutePath());
+        System.out.println("File size: " + imageFile.length());
         BufferedImage image = ImageIO.read(imageFile);
         if (image == null) {
-            throw new IOException("Unable to read image from file: " + filePath);
+            System.err.println("Failed to read image: format may not be supported");
+            return new int[]{0, 0};
         }
         return new int[]{image.getWidth(), image.getHeight()};
     }
@@ -102,12 +113,13 @@ public class PhotoService {
 
         if (!photoRepository.existsByCityAndDescription(city, fileNameWithoutExtension)) {
             try {
-                int[] dimensions = getImageDimensions(cityName, fileName);
+                int[] dimensions = getImageDimensions(cityName, sanitizedFileName);
                 photo.setWidth(dimensions[0]);
                 photo.setHeight(dimensions[1]);
                 System.out.println("Width: " + dimensions[0] + ", Height: " + dimensions[1]);
             } catch (IOException e) {
                 System.err.println("Failed to get image dimensions: " + e.getMessage());
+                e.printStackTrace();
                 photo.setWidth(0);
                 photo.setHeight(0);
             }
