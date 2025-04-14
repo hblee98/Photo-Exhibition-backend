@@ -22,11 +22,13 @@ import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.List;
 import net.coobird.thumbnailator.Thumbnails;
-
-
+import org.springframework.beans.factory.annotation.Value;
 
 @Configuration
 public class GoogleDriveService {
+    @Value("${google.drive.photo-folder-id}")
+    private String photoFolderId;
+
     @Bean
     public Drive googleDrive() throws IOException, GeneralSecurityException {
         InputStream credentialsStream = getClass().getResourceAsStream("/credentials.json");

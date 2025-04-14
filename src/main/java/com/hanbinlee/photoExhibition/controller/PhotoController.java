@@ -5,6 +5,7 @@ import com.hanbinlee.photoExhibition.service.CityService;
 import com.hanbinlee.photoExhibition.service.PhotoService;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -97,4 +98,15 @@ public class PhotoController {
             return ResponseEntity.status(500).build();
         }
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletePhoto(@PathVariable Long id) {
+        try {
+            photoService.deletePhoto(id);
+            return ResponseEntity.ok().body("Successfully deleted");
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error loading: " + e.getMessage());
+        }
+    }
+
 }

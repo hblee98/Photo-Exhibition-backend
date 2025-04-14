@@ -6,6 +6,8 @@ import com.hanbinlee.photoExhibition.repository.PhotoRepository;
 import com.hanbinlee.photoExhibition.repository.CityRepository;
 import com.google.api.services.drive.model.File;
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 import javax.imageio.ImageIO;
@@ -134,5 +136,85 @@ public class PhotoService {
     }
     public List<Photo> getPhotosByRegion(String region) {
         return photoRepository.findByCityName(region);
+    }
+    public void deletePhoto(Long id) throws IOException, GeneralSecurityException {
+        try {
+            Photo photo = photoRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Photo not found"));
+
+            System.out.println("Deleting photo with ID: " + id);
+            System.out.println("Original file path: " + photo.getOriginFilePath());
+            System.out.println("City name: " + photo.getCity().getName());
+
+            String originFilePath = photo.getOriginFilePath();
+            System.out.println("Original file path length: " + originFilePath.length());
+            System.out.println("Last '/' position: " + originFilePath.lastIndexOf("/"));
+            
+            String fileName = originFilePath.substring(originFilePath.lastIndexOf("/") + 1);
+            System.out.println("Extracted file name: '" + fileName + "'");
+            System.out.println("File name length: " + fileName.length());
+
+            String originalFileName = fileName.replaceAll("_", " ");
+            System.out.println("Original file name (with spaces): '" + originalFileName + "'");
+            System.out.println("Original file name length: " + originalFileName.length());
+
+            String cityName = photo.getCity().getName();
+            System.out.println("City name for deletion: '" + cityName + "'");
+            System.out.println("City name length: " + cityName.length());
+
+
+            String basePath = "src/main/resources/static/images/";
+            java.io.File localFile = new java.io.File(basePath + cityName + "/" + fileName);
+            java.io.File thumbnailFile = new java.io.File(basePath + cityName + "/thumbnail/" + fileName);
+            
+            System.out.println("Attempting to delete local file: " + localFile.getAbsolutePath());
+            System.out.println("Attempting to delete thumbnail file: " + thumbnailFile.getAbsolutePath());
+            
+            boolean localFileDeleted = false;
+            if (localFile.exists()) {
+                if (!localFile.delete()) {
+                    System.err.println("Failed to delete local file: " + localFile.getAbsolutePath());
+                } else {
+                    System.out.println("Successfully deleted local file");
+                    localFileDeleted = true;
+                }
+            } else {
+                System.out.println("Local file does not exist");
+            }
+            
+            boolean thumbnailDeleted = false;
+            if (thumbnailFile.exists()) {
+                if (!thumbnailFile.delete()) {
+                    System.err.println("Failed to delete thumbnail file: " + thumbnailFile.getAbsolutePath());
+                } else {
+                    System.out.println("Successfully deleted thumbnail file");
+                    thumbnailDeleted = true;
+                }
+            } else {
+                System.out.println("Thumbnail file does not exist");
+            }
+
+            photoRepository.delete(photo);
+            System.out.println("Photo deleted successfully from database: ID=" + id);
+
+            System.out.println("Deletion Summary:");
+            System.out.println("- Local File: " + (localFileDeleted ? "Success" : "Failed"));
+            System.out.println("- Thumbnail: " + (thumbnailDeleted ? "Success" : "Failed"));
+            System.out.println("- Database: Success");
+
+        } catch (Exception e) {
+            System.err.println("Error in deletePhoto: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
+    }
+    public Photo updatePhoto(Long id, Photo updatedPhoto) {
+        Photo existingPhoto = photoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Photo not found"));
+
+        existingPhoto.setDescription(updatedPhoto.getDescription());
+        existingPhoto.setRegion(updatedPhoto.getRegion());
+        
+        return photoRepository.save(existingPhoto);
     }
 }
