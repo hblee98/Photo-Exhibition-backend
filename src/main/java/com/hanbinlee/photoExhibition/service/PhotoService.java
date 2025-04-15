@@ -6,8 +6,6 @@ import com.hanbinlee.photoExhibition.repository.PhotoRepository;
 import com.hanbinlee.photoExhibition.repository.CityRepository;
 import com.google.api.services.drive.model.File;
 import jakarta.annotation.PostConstruct;
-import jakarta.persistence.EntityManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 import javax.imageio.ImageIO;
@@ -208,13 +206,5 @@ public class PhotoService {
             throw e;
         }
     }
-    public Photo updatePhoto(Long id, Photo updatedPhoto) {
-        Photo existingPhoto = photoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Photo not found"));
 
-        existingPhoto.setDescription(updatedPhoto.getDescription());
-        existingPhoto.setRegion(updatedPhoto.getRegion());
-        
-        return photoRepository.save(existingPhoto);
-    }
 }
